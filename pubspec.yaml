@@ -21,6 +21,11 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  flutter_bloc: ^7.0.0
+  get_storage: ^2.0.1
+  auto_size_text: ^2.1.0
+  bloc: ^7.0.0
+
   flutter:
     sdk: flutter
 
