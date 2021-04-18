@@ -3,6 +3,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:pinder/main_bloc/main_events.dart';
 import 'package:pinder/main_bloc/main_states.dart';
 
+import 'main_events.dart';
+import 'main_states.dart';
+
 class MainBloc extends Bloc<MainEvents, MainStates> {
   MainBloc() : super(SignInStatusGetting());
 
@@ -19,6 +22,8 @@ class MainBloc extends Bloc<MainEvents, MainStates> {
       yield ToSignUp();
     } else if (event is GoToTabsPage) {
       yield ToTabsPage();
+    } else if (event is GoToDetailPage) {
+      yield ToDetilPage(event.postid);
     }
   }
 

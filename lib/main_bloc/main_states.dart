@@ -13,3 +13,8 @@ class ToMainAuthPage extends MainStates {}
 class ToTabsPage extends MainStates {}
 
 class SignInStatusFailed extends MainStates {}
+
+class ToDetilPage extends MainStates {
+  ToDetilPage(this.postid);
+  final String postid;
+}

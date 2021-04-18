@@ -6,6 +6,7 @@ import 'package:pinder/AutPages/signinpage.dart';
 import 'package:pinder/AutPages/signup.dart';
 import 'package:pinder/tabspage.dart';
 
+import '../DetailPostPage.dart';
 import 'authpage.dart';
 
 class MainAuthState extends StatefulWidget {
@@ -31,6 +32,10 @@ class _MainAuthStateState extends State<MainAuthState> {
           return SignUpPage();
         } else if (state is ToTabsPage) {
           return TabsPage();
+        } else if (state is ToDetilPage) {
+          return DetilOfPost(
+            id: state.postid,
+          );
         }
       }),
     );

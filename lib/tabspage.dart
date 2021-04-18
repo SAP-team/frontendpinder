@@ -15,15 +15,16 @@ class _TabsPageState extends State<TabsPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _controller = TabController(initialIndex: 1, length: 3, vsync: this);
+    _controller = TabController(initialIndex: 0, length: 3, vsync: this);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        Center(
+        Align(
+          alignment: Alignment.topCenter,
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * .93,
@@ -36,47 +37,51 @@ class _TabsPageState extends State<TabsPage> with TickerProviderStateMixin {
             ),
           ),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * .07,
-          decoration: BoxDecoration(
-              border: Border(
-            top: BorderSide(color: Color.fromRGBO(34, 35, 43, 100), width: 0.5),
-          )),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * .2,
-                height: MediaQuery.of(context).size.height * .1,
-                child: IconButton(
-                  icon: Icon(Icons.home_outlined, color: Colors.white),
-                  onPressed: () {
-                    _controller.animateTo(0);
-                  },
+        Positioned(
+          top: MediaQuery.of(context).size.height * .93,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * .07,
+            decoration: BoxDecoration(
+                border: Border(
+              top: BorderSide(
+                  color: Color.fromRGBO(34, 35, 43, 100), width: 0.5),
+            )),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * .2,
+                  height: MediaQuery.of(context).size.height * .1,
+                  child: IconButton(
+                    icon: Icon(Icons.home_outlined, color: Colors.white),
+                    onPressed: () {
+                      _controller.animateTo(0);
+                    },
+                  ),
                 ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * .2,
-                height: MediaQuery.of(context).size.height * .1,
-                child: IconButton(
-                  icon: Icon(Icons.add, color: Colors.white),
-                  onPressed: () {
-                    _controller.animateTo(1);
-                  },
+                Container(
+                  width: MediaQuery.of(context).size.width * .2,
+                  height: MediaQuery.of(context).size.height * .1,
+                  child: IconButton(
+                    icon: Icon(Icons.add, color: Colors.white),
+                    onPressed: () {
+                      _controller.animateTo(1);
+                    },
+                  ),
                 ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * .2,
-                height: MediaQuery.of(context).size.height * .1,
-                child: IconButton(
-                  icon: Icon(Icons.person_outline, color: Colors.white),
-                  onPressed: () {
-                    _controller.animateTo(2);
-                  },
+                Container(
+                  width: MediaQuery.of(context).size.width * .2,
+                  height: MediaQuery.of(context).size.height * .1,
+                  child: IconButton(
+                    icon: Icon(Icons.person_outline, color: Colors.white),
+                    onPressed: () {
+                      _controller.animateTo(2);
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
