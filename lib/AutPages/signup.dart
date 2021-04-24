@@ -1,10 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pinder/auth_bloc/auth_bloc.dart';
+import 'package:pinder/auth_bloc/auth_events.dart';
 import 'package:provider/provider.dart';
-
-import '../main_bloc/main_bloc.dart';
-import '../main_bloc/main_events.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -30,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        context.read<MainBloc>().add(GotoMainAuthPage());
+                        context.read<AuthBloc>().add(GotoMainAuthPage());
                       }),
                 )
               ],
@@ -113,7 +112,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             GestureDetector(
               onTap: () {
-                context.read<MainBloc>().add(GotoSigninPage());
+                context.read<AuthBloc>().add(GotoSigninPage());
               },
               child: Container(
                 width: MediaQuery.of(context).size.width * .6,

@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:pinder/main_bloc/main_bloc.dart';
+import 'package:pinder/auth_bloc/auth_bloc.dart';
+import 'package:pinder/auth_bloc/auth_events.dart';
 import 'package:provider/provider.dart';
-
-import '../main_bloc/main_events.dart';
 
 class AuthMainPage extends StatefulWidget {
   AuthMainPage({Key key}) : super(key: key);
@@ -39,7 +38,7 @@ class _AuthMainPageState extends State<AuthMainPage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  context.read<MainBloc>().add(GotoSigninPage());
+                  context.read<AuthBloc>().add(GotoSigninPage());
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * .4,
@@ -59,7 +58,7 @@ class _AuthMainPageState extends State<AuthMainPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  context.read<MainBloc>().add(GotoSignupPage());
+                  context.read<AuthBloc>().add(GotoSignupPage());
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * .4,
@@ -84,7 +83,7 @@ class _AuthMainPageState extends State<AuthMainPage> {
           ),
           GestureDetector(
             onTap: () {
-              context.read<MainBloc>().add(GoToTabsPage());
+              Navigator.pushReplacementNamed(context, "/home");
             },
             child: Container(
               width: MediaQuery.of(context).size.width * .4,

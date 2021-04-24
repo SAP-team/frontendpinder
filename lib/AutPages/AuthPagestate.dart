@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pinder/main_bloc/main_bloc.dart';
-import 'package:pinder/main_bloc/main_states.dart';
+import 'package:pinder/auth_bloc/auth_bloc.dart';
+import 'package:pinder/auth_bloc/auth_states.dart';
 import 'package:pinder/AutPages/signinpage.dart';
 import 'package:pinder/AutPages/signup.dart';
 import 'package:pinder/tabspage.dart';
@@ -21,8 +21,8 @@ class _MainAuthStateState extends State<MainAuthState> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(40, 41, 50, 100),
-      body: BlocBuilder<MainBloc, MainStates>(
-          builder: (BuildContext context, MainStates state) {
+      body: BlocBuilder<AuthBloc, AuthStates>(
+          builder: (BuildContext context, AuthStates state) {
         print(state is ToSignIn);
         if (state is ToMainAuthPage) {
           return AuthMainPage();
@@ -30,12 +30,6 @@ class _MainAuthStateState extends State<MainAuthState> {
           return SignInPage();
         } else if (state is ToSignUp) {
           return SignUpPage();
-        } else if (state is ToTabsPage) {
-          return TabsPage();
-        } else if (state is ToDetilPage) {
-          return DetilOfPost(
-            id: state.postid,
-          );
         }
       }),
     );

@@ -14,6 +14,10 @@
 	<string>pinder</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Paylaşmak için resim almak</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Paylaşmak için resim almak</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
