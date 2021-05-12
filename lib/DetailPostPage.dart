@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'main_bloc/main_bloc.dart';
-import 'main_bloc/main_events.dart';
+import 'blocs/main_bloc/main_bloc.dart';
+import 'blocs/main_bloc/main_events.dart';
 
 class DetilOfPost extends StatefulWidget {
   DetilOfPost({Key key, @required this.id}) : super(key: key);

@@ -1,8 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:pinder/main_bloc/main_events.dart';
-import 'package:pinder/main_bloc/main_states.dart';
-
 import 'main_events.dart';
 import 'main_states.dart';
 

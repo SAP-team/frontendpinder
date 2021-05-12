@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:pinder/auth_bloc/auth_bloc.dart';
-import 'package:pinder/auth_bloc/auth_events.dart';
+import 'package:pinder/blocs/auth_bloc/auth_bloc.dart';
+import 'package:pinder/blocs/auth_bloc/auth_events.dart';
+
+import 'package:pinder/halpers/api.dart';
 import 'package:provider/provider.dart';
 
 class AuthMainPage extends StatefulWidget {

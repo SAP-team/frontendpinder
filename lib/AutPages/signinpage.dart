@@ -1,8 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pinder/auth_bloc/auth_bloc.dart';
-import 'package:pinder/auth_bloc/auth_events.dart';
+import 'package:pinder/blocs/auth_bloc/auth_bloc.dart';
+import 'package:pinder/blocs/auth_bloc/auth_events.dart';
+
 import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
@@ -13,6 +14,8 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  TextEditingController email = new TextEditingController(),
+      password = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,6 +58,7 @@ class _SignInPageState extends State<SignInPage> {
               height: MediaQuery.of(context).size.height * .07,
               child: CupertinoTextField(
                 placeholder: "E-mail",
+                controller: email,
                 style: TextStyle(color: Colors.white),
                 placeholderStyle: TextStyle(color: Colors.white.withAlpha(60)),
                 decoration: BoxDecoration(
@@ -70,6 +74,7 @@ class _SignInPageState extends State<SignInPage> {
               height: MediaQuery.of(context).size.height * .07,
               child: CupertinoTextField(
                 placeholder: "Şifre",
+                controller: password,
                 style: TextStyle(color: Colors.white),
                 placeholderStyle: TextStyle(color: Colors.white.withAlpha(60)),
                 decoration: BoxDecoration(
@@ -82,7 +87,8 @@ class _SignInPageState extends State<SignInPage> {
             ),
             GestureDetector(
               onTap: () {
-                context.read<AuthBloc>().add(GotoSigninPage());
+                context.read<AuthBloc>().add(SigninUser(
+                    email: email.text.trim(), passwod: password.text.trim()));
               },
               child: Container(
                 width: MediaQuery.of(context).size.width * .6,

@@ -1,7 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:pinder/auth_bloc/auth_events.dart';
-import 'package:pinder/auth_bloc/auth_states.dart';
+
+import 'package:pinder/halpers/api.dart';
+
+import 'auth_events.dart';
+import 'auth_states.dart';
 
 class AuthBloc extends Bloc<AuthEvents, AuthStates> {
   AuthBloc() : super(SignInStatusGetting());
@@ -17,6 +20,19 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
       yield ToMainAuthPage();
     } else if (event is GotoSignupPage) {
       yield ToSignUp();
+    } else if (event is SigninUser) {
+      yield* signin(event);
+    }
+  }
+
+  Stream<AuthStates> signin(SigninUser event) async* {
+    Api api = new Api();
+    try {
+      final result = await api.loginin(event.email, event.passwod);
+      print(result);
+    } on Exception catch (e) {
+      print('error is: ${e.toString()}');
+      yield SignInStatusFailed();
     }
   }
 

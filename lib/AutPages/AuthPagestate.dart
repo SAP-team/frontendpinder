@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pinder/auth_bloc/auth_bloc.dart';
-import 'package:pinder/auth_bloc/auth_states.dart';
+
 import 'package:pinder/AutPages/signinpage.dart';
 import 'package:pinder/AutPages/signup.dart';
+import 'package:pinder/blocs/auth_bloc/auth_bloc.dart';
+import 'package:pinder/blocs/auth_bloc/auth_states.dart';
 import 'package:pinder/tabspage.dart';
 
 import '../DetailPostPage.dart';
@@ -23,7 +24,6 @@ class _MainAuthStateState extends State<MainAuthState> {
       backgroundColor: Color.fromRGBO(40, 41, 50, 100),
       body: BlocBuilder<AuthBloc, AuthStates>(
           builder: (BuildContext context, AuthStates state) {
-        print(state is ToSignIn);
         if (state is ToMainAuthPage) {
           return AuthMainPage();
         } else if (state is ToSignIn) {

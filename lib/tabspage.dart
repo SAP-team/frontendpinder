@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pinder/FeedPage.dart';
-import 'package:pinder/MyFeeds.dart';
-import 'package:pinder/ProfilePage.dart';
-import 'package:pinder/main_bloc/main_bloc.dart';
-import 'package:pinder/main_bloc/main_states.dart';
+import 'package:pinder/blocs/main_bloc/main_bloc.dart';
 
 import 'DetailPostPage.dart';
-import 'main_bloc/main_events.dart';
+import 'FeedPage.dart';
+import 'MyFeeds.dart';
+import 'ProfilePage.dart';
+import 'blocs/main_bloc/main_states.dart';
 
 class TabsPage extends StatefulWidget {
   TabsPage({Key key}) : super(key: key);
