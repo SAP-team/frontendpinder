@@ -30,20 +30,21 @@ class Api {
           'result': response.body,
         };
         return data;
-      } else {
+      } else if (response.statusCode == 400) {
         Map data = {
           'isscuses': false,
           'result': response.body,
         };
         return data;
-      }
+      } else
+        return null;
     } catch (e) {
       print(e);
       return null;
     }
   }
 
-  Future<String> loginin(String email, String password) async {
+  Future<Map> loginin(String email, String password) async {
     try {
       var urlforsignup = "auth/login";
 
@@ -56,7 +57,17 @@ class Api {
       );
 
       if (response.statusCode == 200) {
-        return response.body;
+        Map data = {
+          'isscuses': true,
+          'result': response.body,
+        };
+        return data;
+      } else if (response.statusCode == 400) {
+        Map data = {
+          'isscuses': false,
+          'result': response.body,
+        };
+        return data;
       } else
         return null;
     } catch (e) {

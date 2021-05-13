@@ -13,17 +13,23 @@ import 'blocs/main_bloc/main_bloc.dart';
 import 'blocs/main_bloc/main_events.dart';
 import 'blocs/siginup_bloc/signup_bloc.dart';
 import 'blocs/siginup_bloc/signup_events.dart';
+import 'blocs/signin_bloc/signin_bloc.dart';
+import 'blocs/signin_bloc/signin_events.dart';
 
 void main() async {
   await GetStorage.init();
+
   HttpOverrides.global = new DevHttpOverrides();
 
   runApp(BlocProvider(
-    create: (_) => SignUpBloc()..add(Startup()),
+    create: (_) => SigninBloc()..add(Startup()),
     child: BlocProvider(
-        create: (_) => AuthBloc()..add(GetSigninStatus()),
-        child: BlocProvider(
-            create: (_) => MainBloc()..add(GoToHomPage()), child: MyApp())),
+      create: (_) => SignUpBloc()..add(StartupforIn()),
+      child: BlocProvider(
+          create: (_) => AuthBloc()..add(GetSigninStatus()),
+          child: BlocProvider(
+              create: (_) => MainBloc()..add(GoToHomPage()), child: MyApp())),
+    ),
   ));
 }
 
@@ -35,7 +41,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => MainAuthState(),
-        '/home': (context) => TabsPage(),
       },
     );
   }

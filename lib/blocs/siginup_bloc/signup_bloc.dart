@@ -10,6 +10,7 @@ class SignUpBloc extends Bloc<SignupEvents, SignupStates> {
   @override
   Stream<SignupStates> mapEventToState(SignupEvents event) async* {
     if (event is Signup) {
+      yield Signingup();
       yield* signup(event);
     }
   }

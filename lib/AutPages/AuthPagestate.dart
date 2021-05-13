@@ -30,6 +30,13 @@ class _MainAuthStateState extends State<MainAuthState> {
           return SignInPage();
         } else if (state is ToSignUp) {
           return SignUpPage();
+        } else if (state is SignInStatusSucsess) {
+          return TabsPage();
+        } else {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+          );
         }
       }),
     );

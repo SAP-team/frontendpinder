@@ -20,19 +20,6 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
       yield ToMainAuthPage();
     } else if (event is GotoSignupPage) {
       yield ToSignUp();
-    } else if (event is SigninUser) {
-      yield* signin(event);
-    }
-  }
-
-  Stream<AuthStates> signin(SigninUser event) async* {
-    Api api = new Api();
-    try {
-      final result = await api.loginin(event.email, event.passwod);
-      print(result);
-    } on Exception catch (e) {
-      print('error is: ${e.toString()}');
-      yield SignInStatusFailed();
     }
   }
 
@@ -43,11 +30,11 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
       if (uid == "") {
         yield ToMainAuthPage();
       } else {
-        yield SignInStatusFailed();
+        yield SignInStatusSucsess();
       }
     } on Exception catch (e) {
       print('error is: ${e.toString()}');
-      yield SignInStatusFailed();
+      yield ToMainAuthPage();
     }
   }
 }
