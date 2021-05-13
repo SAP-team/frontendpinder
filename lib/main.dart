@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
-
-import 'package:pinder/tabspage.dart';
+import 'package:pinder/detail_bloc/detail_bloc.dart';
+import 'package:pinder/detail_bloc/detail_events.dart';
+import 'package:pinder/halpers/models/detailmodel.dart';
 
 import 'AutPages/AuthPagestate.dart';
 import 'blocs/auth_bloc/auth_bloc.dart';
 import 'blocs/auth_bloc/auth_events.dart';
+import 'blocs/feed_bloc/feed_bloc.dart';
+import 'blocs/feed_bloc/feed_events.dart';
 import 'blocs/main_bloc/main_bloc.dart';
 import 'blocs/main_bloc/main_events.dart';
 import 'blocs/siginup_bloc/signup_bloc.dart';
@@ -22,13 +25,20 @@ void main() async {
   HttpOverrides.global = new DevHttpOverrides();
 
   runApp(BlocProvider(
-    create: (_) => SigninBloc()..add(Startup()),
+    create: (_) => DetailBloc()..add(StatrupfotDetail()),
     child: BlocProvider(
-      create: (_) => SignUpBloc()..add(StartupforIn()),
+      create: (_) => FeedBloc()..add(GetFeed()),
       child: BlocProvider(
-          create: (_) => AuthBloc()..add(GetSigninStatus()),
+        create: (_) => SigninBloc()..add(Startup()),
+        child: BlocProvider(
+          create: (_) => SignUpBloc()..add(StartupforIn()),
           child: BlocProvider(
-              create: (_) => MainBloc()..add(GoToHomPage()), child: MyApp())),
+              create: (_) => AuthBloc()..add(GetSigninStatus()),
+              child: BlocProvider(
+                  create: (_) => MainBloc()..add(GoToHomPage()),
+                  child: MyApp())),
+        ),
+      ),
     ),
   ));
 }

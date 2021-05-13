@@ -2,15 +2,16 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinder/detail_bloc/detail_bloc.dart';
+import 'package:pinder/detail_bloc/detail_states.dart';
+import 'package:pinder/halpers/models/detailmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'blocs/main_bloc/main_bloc.dart';
 import 'blocs/main_bloc/main_events.dart';
+import 'halpers/loading.dart';
 
 class DetilOfPost extends StatefulWidget {
-  DetilOfPost({Key key, @required this.id}) : super(key: key);
-
-  String id;
   @override
   _DetilOfPostState createState() => _DetilOfPostState();
 }
@@ -36,9 +37,9 @@ class _DetilOfPostState extends State<DetilOfPost>
     animationController.forward();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget loaded(DetailModel model) {
     _scale = animationController.value;
+
     return AnimatedOpacity(
       opacity: _scale,
       duration: Duration(milliseconds: 200),
@@ -64,8 +65,8 @@ class _DetilOfPostState extends State<DetilOfPost>
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height * .4,
-                    child: Image(
-                      image: ExactAssetImage("assets/dog.png"),
+                    child: Image.memory(
+                      model.image,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -74,7 +75,7 @@ class _DetilOfPostState extends State<DetilOfPost>
                     height: MediaQuery.of(context).size.height * .07,
                     margin: EdgeInsets.all(10),
                     child: AutoSizeText(
-                      "Kopegim boncuk kayıp olsmustur goren olursa lutfen arasin",
+                      model.disc,
                       textAlign: TextAlign.center,
                       minFontSize: 1,
                       maxLines: 2,
@@ -85,7 +86,7 @@ class _DetilOfPostState extends State<DetilOfPost>
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height * .07,
                     child: AutoSizeText(
-                      "Bulana ödül: 1000tl",
+                      model.price,
                       textAlign: TextAlign.center,
                       minFontSize: 1,
                       maxLines: 1,
@@ -129,7 +130,7 @@ class _DetilOfPostState extends State<DetilOfPost>
                         ),
                         GestureDetector(
                           onTap: () {
-                            launch("tel://21213123123");
+                            launch("tel://${model.telno}");
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.25,
@@ -310,5 +311,17 @@ class _DetilOfPostState extends State<DetilOfPost>
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<DetailBloc, DetailStates>(
+        builder: (BuildContext context, DetailStates state) {
+      if (state is Loading) {
+        return LoadinPage();
+      } else if (state is Succses) {
+        return loaded(state.model);
+      }
+    });
   }
 }

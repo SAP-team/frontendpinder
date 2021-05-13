@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinder/blocs/main_bloc/main_bloc.dart';
 
 import 'DetailPostPage.dart';
+import 'blocs/feed_bloc/feed_bloc.dart';
+import 'blocs/feed_bloc/feed_events.dart';
 import 'tabpages/FeedPage.dart';
 import 'tabpages/addpage.dart';
 import 'tabpages/ProfilePage.dart';
@@ -75,6 +77,8 @@ class _TabsPageState extends State<TabsPage> with TickerProviderStateMixin {
                     child: IconButton(
                       icon: Icon(Icons.home_outlined, color: Colors.white),
                       onPressed: () {
+                        context.read<FeedBloc>().add(GetFeed());
+
                         _controller.animateTo(0);
                       },
                     ),
@@ -117,9 +121,7 @@ class _TabsPageState extends State<TabsPage> with TickerProviderStateMixin {
         if (state is ToDetilPage) {
           animationController.forward();
 
-          return DetilOfPost(
-            id: "deneme",
-          );
+          return DetilOfPost();
         } else if (state is ToHomPage) {
           animationController.reverse();
 

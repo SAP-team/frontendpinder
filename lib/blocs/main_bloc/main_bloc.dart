@@ -10,7 +10,7 @@ class MainBloc extends Bloc<MainEvents, MainStates> {
     if (event is GoToHomPage) {
       yield ToHomPage();
     } else if (event is GoToDetailPage) {
-      yield ToDetilPage(event.postid);
+      yield ToDetilPage();
     }
   }
 }

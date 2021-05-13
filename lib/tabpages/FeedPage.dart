@@ -1,7 +1,16 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinder/blocs/feed_bloc/feed_bloc.dart';
+import 'package:pinder/blocs/feed_bloc/feed_events.dart';
+import 'package:pinder/blocs/feed_bloc/feed_states.dart';
+import 'package:pinder/detail_bloc/detail_bloc.dart';
+import 'package:pinder/detail_bloc/detail_events.dart';
+import 'package:pinder/halpers/models/feedmodel.dart';
+import 'package:pinder/halpers/loading.dart';
 import 'package:provider/provider.dart';
 
 import '../blocs/main_bloc/main_bloc.dart';
@@ -15,8 +24,7 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget feed(List<FeedModel> feed) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * .9,
@@ -24,7 +32,8 @@ class _FeedPageState extends State<FeedPage> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              context.read<MainBloc>().add(GoToDetailPage(postid: "deneme"));
+              context.read<MainBloc>().add(GoToDetailPage());
+              context.read<DetailBloc>().add(GetDetail(id: feed[index].id));
             },
             child: Container(
               width: MediaQuery.of(context).size.width * .7,
@@ -42,8 +51,8 @@ class _FeedPageState extends State<FeedPage> {
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height * .3,
                           padding: EdgeInsets.all(10),
-                          child: Image(
-                            image: ExactAssetImage("assets/dog.png"),
+                          child: Image.memory(
+                            feed[index].image,
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -53,7 +62,7 @@ class _FeedPageState extends State<FeedPage> {
                           padding: EdgeInsets.all(10),
                           child: Center(
                             child: AutoSizeText(
-                              "Kopegim boncuk kayıp olsmustur goren olursa lutfen arasin",
+                              feed[index].postname,
                               maxLines: 3,
                               textAlign: TextAlign.center,
                               minFontSize: 1,
@@ -77,8 +86,21 @@ class _FeedPageState extends State<FeedPage> {
             ),
           );
         },
-        itemCount: 10,
+        itemCount: feed.length,
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<FeedBloc, FeedStates>(
+      builder: (BuildContext context, FeedStates state) {
+        if (state is Succses) {
+          return feed(state.feed);
+        } else if (state is Loading) {
+          return LoadinPage();
+        }
+      },
     );
   }
 }
