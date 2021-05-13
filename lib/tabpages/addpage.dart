@@ -138,7 +138,7 @@ class _AddPageState extends State<AddPage> {
           ),
           Container(
             width: MediaQuery.of(context).size.width * .8,
-            height: MediaQuery.of(context).size.height * .07,
+            height: MediaQuery.of(context).size.height * .09,
             child: CupertinoTextField(
               placeholder: "Ödül",
               textAlign: TextAlign.center,

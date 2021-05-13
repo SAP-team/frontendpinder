@@ -8,3 +8,5 @@ class Error extends SignupStates {
 class Signingup extends SignupStates {}
 
 class Idle extends SignupStates {}
+
+class Sucsses extends SignupStates {}

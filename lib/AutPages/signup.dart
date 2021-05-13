@@ -26,6 +26,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final RoundedLoadingButtonController _btnController =
       RoundedLoadingButtonController();
   String text = "Üye ol";
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,10 +35,20 @@ class _SignUpPageState extends State<SignUpPage> {
         listener: (context, state) {
           if (state is Error) {
             setState(() {
-              text = state.error;
-              _btnController.error();
+              text = state.error.replaceAll('"', "");
+              _btnController.reset();
+              loading = false;
             });
-          } else if (state is Signingup) {}
+          } else if (state is Signingup) {
+            setState(() {
+              loading = true;
+            });
+          } else if (state is Sucsses) {
+            setState(() {
+              loading = false;
+            });
+            context.read<AuthBloc>().add(GetSigninStatus());
+          }
         },
         child: SingleChildScrollView(
           child: Column(
@@ -150,11 +162,21 @@ class _SignUpPageState extends State<SignUpPage> {
                   color: Color.fromRGBO(216, 146, 22, 100),
                   controller: _btnController,
                   onPressed: () {
-                    context.read<SignUpBloc>().add(Signup(
-                        surname: surname.text.trim(),
-                        name: name.text.trim(),
-                        email: email.text.trim(),
-                        passwod: password.text.trim()));
+                    if (email.text.trim() != "" &&
+                        password.text.trim() != "" &&
+                        surname.text.trim() != "" &&
+                        name.text.trim() != "")
+                      context.read<SignUpBloc>().add(Signup(
+                          surname: surname.text.trim(),
+                          name: name.text.trim(),
+                          email: email.text.trim(),
+                          passwod: password.text.trim()));
+                    else {
+                      setState(() {
+                        text = "Alanlar Boş Bırakılamaz";
+                        _btnController.reset();
+                      });
+                    }
                   },
                   child: Center(
                     child: AutoSizeText(

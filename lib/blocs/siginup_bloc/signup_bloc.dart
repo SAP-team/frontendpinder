@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:pinder/blocs/siginup_bloc/signup_events.dart';
 import 'package:pinder/halpers/api.dart';
 
@@ -22,6 +23,10 @@ class SignUpBloc extends Bloc<SignupEvents, SignupStates> {
           event.name, event.surname, event.email, event.passwod);
       if (!result["isscuses"]) {
         yield Error(result["result"]);
+      } else {
+        final box = GetStorage();
+        box.write("uid", result["result"]);
+        yield Sucsses();
       }
     } on Exception catch (e) {
       print('error is: ${e.toString()}');

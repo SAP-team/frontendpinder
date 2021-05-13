@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinder/blocs/main_bloc/main_bloc.dart';
 
 import 'DetailPostPage.dart';
-import 'FeedPage.dart';
-import 'MyFeeds.dart';
-import 'ProfilePage.dart';
+import 'tabpages/FeedPage.dart';
+import 'tabpages/addpage.dart';
+import 'tabpages/ProfilePage.dart';
 import 'blocs/main_bloc/main_states.dart';
 
 class TabsPage extends StatefulWidget {

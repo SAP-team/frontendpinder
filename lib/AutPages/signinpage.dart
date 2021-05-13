@@ -45,7 +45,8 @@ class _SignInPageState extends State<SignInPage> {
             setState(() {
               loading = false;
             });
-            Navigator.pushReplacementNamed(context, "/home");
+
+            context.read<AuthBloc>().add(GetSigninStatus());
           }
         },
         child: SingleChildScrollView(
