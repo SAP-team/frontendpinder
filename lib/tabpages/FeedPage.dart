@@ -1,14 +1,16 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinder/blocs/detail_bloc/detail_bloc.dart';
+import 'package:pinder/blocs/detail_bloc/detail_events.dart';
 import 'package:pinder/blocs/feed_bloc/feed_bloc.dart';
 import 'package:pinder/blocs/feed_bloc/feed_events.dart';
 import 'package:pinder/blocs/feed_bloc/feed_states.dart';
-import 'package:pinder/detail_bloc/detail_bloc.dart';
-import 'package:pinder/detail_bloc/detail_events.dart';
+
 import 'package:pinder/halpers/models/feedmodel.dart';
 import 'package:pinder/halpers/loading.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +32,8 @@ class _FeedPageState extends State<FeedPage> {
       height: MediaQuery.of(context).size.height * .9,
       child: ListView.builder(
         itemBuilder: (context, index) {
+          Uint8List iamge = base64Decode(feed[index].image.toString());
+
           return GestureDetector(
             onTap: () {
               context.read<MainBloc>().add(GoToDetailPage());
@@ -52,7 +56,7 @@ class _FeedPageState extends State<FeedPage> {
                           height: MediaQuery.of(context).size.height * .3,
                           padding: EdgeInsets.all(10),
                           child: Image.memory(
-                            feed[index].image,
+                            iamge,
                             fit: BoxFit.contain,
                           ),
                         ),

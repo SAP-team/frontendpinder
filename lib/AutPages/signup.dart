@@ -33,7 +33,12 @@ class _SignUpPageState extends State<SignUpPage> {
     return SafeArea(
       child: BlocListener<SignUpBloc, SignupStates>(
         listener: (context, state) {
+          print(state);
           if (state is Error) {
+            print(state.error);
+            if (state.error == "")
+              context.read<AuthBloc>().add(GotoSigninPage());
+
             setState(() {
               text = state.error.replaceAll('"', "");
               _btnController.reset();
@@ -44,10 +49,11 @@ class _SignUpPageState extends State<SignUpPage> {
               loading = true;
             });
           } else if (state is Sucsses) {
+            context.read<AuthBloc>().add(GetSigninStatus());
+
             setState(() {
               loading = false;
             });
-            context.read<AuthBloc>().add(GetSigninStatus());
           }
         },
         child: SingleChildScrollView(

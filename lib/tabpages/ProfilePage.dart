@@ -3,7 +3,12 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pinder/blocs/profile_bloc/profile_bloc.dart';
+import 'package:pinder/blocs/profile_bloc/profile_states.dart';
+import 'package:pinder/halpers/loading.dart';
+import 'package:pinder/halpers/profilemodel.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
@@ -83,8 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
         });
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget sucsses(ProfileModel model) {
     return SafeArea(
       bottom: false,
       child: NotificationListener<OverscrollIndicatorNotification>(
@@ -139,11 +143,17 @@ class _ProfilePageState extends State<ProfilePage> {
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white),
                           ),
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: MediaQuery.of(context).size.width * 0.15,
-                          ),
+                          child: model.image != null
+                              ? Image.memory(
+                                  model.image,
+                                  fit: BoxFit.contain,
+                                )
+                              : Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size:
+                                      MediaQuery.of(context).size.width * 0.15,
+                                ),
                         )),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .015,
@@ -152,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: MediaQuery.of(context).size.width * .9,
                 height: MediaQuery.of(context).size.height * .07,
                 child: CupertinoTextField(
-                  placeholder: "İsim",
+                  placeholder: "${model.name ?? "İsim"}",
                   style: TextStyle(color: Colors.white),
                   placeholderStyle:
                       TextStyle(color: Colors.white.withAlpha(60)),
@@ -168,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: MediaQuery.of(context).size.width * .9,
                 height: MediaQuery.of(context).size.height * .07,
                 child: CupertinoTextField(
-                  placeholder: "Soy isim",
+                  placeholder: "${model.surname ?? "Soy isim"}",
                   style: TextStyle(color: Colors.white),
                   placeholderStyle:
                       TextStyle(color: Colors.white.withAlpha(60)),
@@ -184,7 +194,23 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: MediaQuery.of(context).size.width * .9,
                 height: MediaQuery.of(context).size.height * .07,
                 child: CupertinoTextField(
-                  placeholder: "E-mail",
+                  placeholder: "${model.email ?? "E-mail"}",
+                  style: TextStyle(color: Colors.white),
+                  placeholderStyle:
+                      TextStyle(color: Colors.white.withAlpha(60)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromRGBO(47, 48, 60, 100)),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .025,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * .9,
+                height: MediaQuery.of(context).size.height * .07,
+                child: CupertinoTextField(
+                  placeholder: "${model.phone ?? "Telefon numarası"}",
                   style: TextStyle(color: Colors.white),
                   placeholderStyle:
                       TextStyle(color: Colors.white.withAlpha(60)),
@@ -201,22 +227,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: MediaQuery.of(context).size.height * .07,
                 child: CupertinoTextField(
                   placeholder: "Şifre",
-                  style: TextStyle(color: Colors.white),
-                  placeholderStyle:
-                      TextStyle(color: Colors.white.withAlpha(60)),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color.fromRGBO(47, 48, 60, 100)),
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .025,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * .9,
-                height: MediaQuery.of(context).size.height * .07,
-                child: CupertinoTextField(
-                  placeholder: "Şifre 2",
                   style: TextStyle(color: Colors.white),
                   placeholderStyle:
                       TextStyle(color: Colors.white.withAlpha(60)),
@@ -250,6 +260,19 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileBloc, ProfileStates>(
+      builder: (context, state) {
+        if (state is GettingProfile) {
+          return LoadinPage();
+        } else if (state is ProfileSucsses) {
+          return sucsses(state.model);
+        }
+      },
     );
   }
 }

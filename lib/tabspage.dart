@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinder/blocs/main_bloc/main_bloc.dart';
+import 'package:pinder/blocs/profile_bloc/profile_bloc.dart';
 
 import 'DetailPostPage.dart';
 import 'blocs/feed_bloc/feed_bloc.dart';
 import 'blocs/feed_bloc/feed_events.dart';
+import 'blocs/profile_bloc/profile_events.dart';
 import 'tabpages/FeedPage.dart';
 import 'tabpages/addpage.dart';
 import 'tabpages/ProfilePage.dart';
@@ -99,6 +101,8 @@ class _TabsPageState extends State<TabsPage> with TickerProviderStateMixin {
                     child: IconButton(
                       icon: Icon(Icons.person_outline, color: Colors.white),
                       onPressed: () {
+                        context.read<ProfileBloc>().add(GetUserData());
+
                         _controller.animateTo(2);
                       },
                     ),

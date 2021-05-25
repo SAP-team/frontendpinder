@@ -1,9 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pinder/blocs/addpost_bloc/addpost_bloc.dart';
+import 'package:pinder/blocs/addpost_bloc/addpost_events.dart';
+import 'package:pinder/blocs/addpost_bloc/addpost_states.dart';
+import 'package:pinder/halpers/loading.dart';
+import 'package:pinder/halpers/models/newpostmodel.dart';
 
 class AddPage extends StatefulWidget {
   AddPage({Key key}) : super(key: key);
@@ -15,13 +25,24 @@ class _AddPageState extends State<AddPage> {
   File pp;
   final picker = ImagePicker();
   bool firstcheckbox = false, secondcheckbox = false;
+  TextEditingController explain = new TextEditingController(),
+      price = new TextEditingController();
+  String image, number;
+  String uploadimage;
 
   getfromgalery() async {
     final pickedfile = await picker.getImage(source: ImageSource.gallery);
     if (pickedfile != null) {
-      setState(() {
-        pp = File(pickedfile.path);
+      File compressedFile = await FlutterNativeImage.compressImage(
+          pickedfile.path,
+          quality: 90,
+          targetWidth: 400,
+          targetHeight: 300,
+          percentage: 90);
+      compressedFile.readAsBytes().then((value) {
+        uploadimage = base64Encode(value);
       });
+
       setState(() {
         pp = File(pickedfile.path);
       });
@@ -31,6 +52,15 @@ class _AddPageState extends State<AddPage> {
   getfromcamera() async {
     final pickedfile = await picker.getImage(source: ImageSource.camera);
     if (pickedfile != null) {
+      File compressedFile = await FlutterNativeImage.compressImage(
+          pickedfile.path,
+          quality: 90,
+          targetWidth: 400,
+          targetHeight: 300,
+          percentage: 90);
+      compressedFile.readAsBytes().then((value) {
+        uploadimage = base64Encode(value);
+      });
       setState(() {
         pp = File(pickedfile.path);
       });
@@ -84,7 +114,15 @@ class _AddPageState extends State<AddPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    final box = GetStorage();
+    super.initState();
+    setState(() {
+      number = box.read("number") ?? "";
+    });
+  }
+
+  Widget home() {
     return SafeArea(
       bottom: false,
       child: Column(
@@ -119,6 +157,7 @@ class _AddPageState extends State<AddPage> {
             height: MediaQuery.of(context).size.height * .2,
             child: CupertinoTextField(
               placeholder: "Açıklama",
+              controller: explain,
               textAlign: TextAlign.left,
               padding: EdgeInsets.all(20),
               minLines: 1,
@@ -140,6 +179,7 @@ class _AddPageState extends State<AddPage> {
             width: MediaQuery.of(context).size.width * .8,
             height: MediaQuery.of(context).size.height * .09,
             child: CupertinoTextField(
+              controller: price,
               placeholder: "Ödül",
               textAlign: TextAlign.center,
               padding: EdgeInsets.all(20),
@@ -156,40 +196,43 @@ class _AddPageState extends State<AddPage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * .05,
           ),
-          Row(
-            children: [
-              SizedBox(width: MediaQuery.of(context).size.width * .1),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    firstcheckbox = !firstcheckbox;
-                  });
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width * .1,
-                  height: MediaQuery.of(context).size.width * .1,
-                  decoration:
-                      BoxDecoration(border: Border.all(color: Colors.white)),
-                  child: firstcheckbox
-                      ? Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        )
-                      : SizedBox(),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * .6,
-                height: MediaQuery.of(context).size.width * .1,
-                child: Center(
-                  child: AutoSizeText(
-                    "Ilan icin beni arasınlar",
-                    maxLines: 1,
-                    style: TextStyle(color: Colors.white),
+          Visibility(
+            visible: number != "",
+            child: Row(
+              children: [
+                SizedBox(width: MediaQuery.of(context).size.width * .1),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      firstcheckbox = !firstcheckbox;
+                    });
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * .1,
+                    height: MediaQuery.of(context).size.width * .1,
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.white)),
+                    child: firstcheckbox
+                        ? Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          )
+                        : SizedBox(),
                   ),
                 ),
-              )
-            ],
+                Container(
+                  width: MediaQuery.of(context).size.width * .6,
+                  height: MediaQuery.of(context).size.width * .1,
+                  child: Center(
+                    child: AutoSizeText(
+                      "Ilan icin beni arasınlar",
+                      maxLines: 1,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * .025,
@@ -221,7 +264,7 @@ class _AddPageState extends State<AddPage> {
                 height: MediaQuery.of(context).size.width * .1,
                 child: Center(
                   child: AutoSizeText(
-                    "Gonderi sozlesmini kabul ediyorum",
+                    "Gönderi sözleşmesini kabul ediyorum",
                     maxLines: 1,
                     style: TextStyle(color: Colors.white),
                   ),
@@ -233,7 +276,14 @@ class _AddPageState extends State<AddPage> {
             height: MediaQuery.of(context).size.height * .05,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              context.read<AddPostBloc>().add(AddPost(
+                  model: new NewPostModel(
+                      explain.text.trim(),
+                      price.text.trim(),
+                      firstcheckbox ? number : "",
+                      uploadimage)));
+            },
             child: Container(
               width: MediaQuery.of(context).size.width * .6,
               height: MediaQuery.of(context).size.height * .07,
@@ -253,5 +303,17 @@ class _AddPageState extends State<AddPage> {
         ],
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AddPostBloc, AddPostStates>(
+        builder: (BuildContext context, AddPostStates state) {
+      if (state is Loading) {
+        return LoadinPage();
+      } else {
+        return home();
+      }
+    });
   }
 }

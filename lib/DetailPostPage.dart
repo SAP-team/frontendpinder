@@ -2,11 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pinder/detail_bloc/detail_bloc.dart';
-import 'package:pinder/detail_bloc/detail_states.dart';
+
 import 'package:pinder/halpers/models/detailmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'blocs/detail_bloc/detail_bloc.dart';
+import 'blocs/detail_bloc/detail_states.dart';
 import 'blocs/main_bloc/main_bloc.dart';
 import 'blocs/main_bloc/main_events.dart';
 import 'halpers/loading.dart';
@@ -128,23 +129,26 @@ class _DetilOfPostState extends State<DetilOfPost>
                             ),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            launch("tel://${model.telno}");
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.25,
-                            height: MediaQuery.of(context).size.width * 0.15,
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(101, 94, 94, 100),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Center(
-                              child: AutoSizeText(
-                                "ARA",
-                                maxLines: 1,
-                                minFontSize: 1,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+                        Visibility(
+                          visible: model.telno != "",
+                          child: GestureDetector(
+                            onTap: () {
+                              launch("tel://${model.telno}");
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              height: MediaQuery.of(context).size.width * 0.15,
+                              decoration: BoxDecoration(
+                                  color: Color.fromRGBO(101, 94, 94, 100),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Center(
+                                child: AutoSizeText(
+                                  "ARA",
+                                  maxLines: 1,
+                                  minFontSize: 1,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
                               ),
                             ),
                           ),
@@ -154,7 +158,7 @@ class _DetilOfPostState extends State<DetilOfPost>
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: 11,
+                      itemCount: model.comment.length,
                       itemBuilder: (context, index) {
                         return index <= 9
                             ? Container(
@@ -231,7 +235,7 @@ class _DetilOfPostState extends State<DetilOfPost>
                                               0.2,
                                           child: Center(
                                             child: AutoSizeText(
-                                              "yorum",
+                                              model.comment[index].postcomment,
                                               textAlign: TextAlign.center,
                                               minFontSize: 1,
                                               style: TextStyle(

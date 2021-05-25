@@ -26,6 +26,7 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
   Stream<AuthStates> _getsigninstatus() async* {
     try {
       final box = GetStorage();
+      print(box.read("uid"));
       String uid = box.read("uid") ?? "";
       if (uid == "") {
         yield ToMainAuthPage();

@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:pinder/detail_bloc/detail_events.dart';
-import 'package:pinder/detail_bloc/detail_states.dart';
+
 import 'package:pinder/halpers/api.dart';
+
+import 'detail_events.dart';
+import 'detail_states.dart';
 
 class DetailBloc extends Bloc<DetailEvents, DetailStates> {
   DetailBloc() : super(Loading());
