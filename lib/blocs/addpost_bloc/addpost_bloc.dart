@@ -22,13 +22,13 @@ class AddPostBloc extends Bloc<AddPostEvents, AddPostStates> {
       Api api = new Api();
       final result = await api.addpost(model);
       if (!result["isscuses"]) {
-        yield Error();
+        yield Error(result["result"].toString());
       } else {
         yield Sucess();
       }
     } on Exception catch (e) {
       print('error is: ${e.toString()}');
-      yield Error();
+      yield Error("Beklenmeyen bir hata oluştu");
     }
   }
 }

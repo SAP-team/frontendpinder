@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -115,7 +113,7 @@ class Api {
         }
         Map data = {
           'isscuses': true,
-          'result': feeds,
+          'result': feeds.reversed.toList(),
         };
         return data;
       } else if (response.statusCode == 400) {

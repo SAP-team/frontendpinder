@@ -91,7 +91,7 @@ class _DetilOfPostState extends State<DetilOfPost>
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height * .07,
                     child: AutoSizeText(
-                      model.price,
+                      model.price ?? "Ödül bulunmuyor",
                       textAlign: TextAlign.center,
                       minFontSize: 1,
                       maxLines: 1,

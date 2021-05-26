@@ -16,6 +16,7 @@ import 'package:pinder/blocs/main_bloc/main_bloc.dart';
 import 'package:pinder/blocs/main_bloc/main_events.dart';
 import 'package:pinder/halpers/loading.dart';
 import 'package:pinder/halpers/models/newpostmodel.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class AddPage extends StatefulWidget {
   AddPage({Key key}) : super(key: key);
@@ -31,6 +32,9 @@ class _AddPageState extends State<AddPage> {
       price = new TextEditingController();
   String image, number;
   String uploadimage;
+  final RoundedLoadingButtonController _btnController =
+      RoundedLoadingButtonController();
+  String text = "Paylaş";
 
   getfromgalery() async {
     final pickedfile = await picker.getImage(source: ImageSource.gallery);
@@ -125,93 +129,150 @@ class _AddPageState extends State<AddPage> {
   }
 
   Widget home() {
-    return SafeArea(
-      bottom: false,
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (OverscrollIndicatorNotification overscroll) {
-          overscroll.disallowGlow();
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  showpopup();
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * .2,
-                  child: pp == null
-                      ? Center(
-                          child: AutoSizeText(
-                            "Resim Ekle",
-                            style: TextStyle(color: Colors.white, fontSize: 40),
-                          ),
-                        )
-                      : Image.file(pp),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 1,
-                color: Color.fromRGBO(80, 81, 87, 100),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .025,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * .8,
-                height: MediaQuery.of(context).size.height * .2,
-                child: CupertinoTextField(
-                  placeholder: "Açıklama",
-                  controller: explain,
-                  textAlign: TextAlign.left,
-                  padding: EdgeInsets.all(20),
-                  minLines: 1,
-                  maxLines: 10,
-                  style: TextStyle(color: Colors.white),
-                  cursorColor: Colors.grey[600],
-                  placeholderStyle: TextStyle(color: Colors.grey[600]),
-                  textAlignVertical: TextAlignVertical.top,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(40, 41, 50, 100),
-                    borderRadius: BorderRadius.circular(20),
+    return BlocListener<AddPostBloc, AddPostStates>(
+      listener: (context, state) {
+        if (state is Sucess) {
+          setState(() {
+            _btnController.success();
+          });
+        }
+        if (state is Error) {
+          setState(() {
+            _btnController.reset();
+
+            text = "Bir hata oluştu tekrar deneyin";
+          });
+        }
+      },
+      child: SafeArea(
+        bottom: false,
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (OverscrollIndicatorNotification overscroll) {
+            overscroll.disallowGlow();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    showpopup();
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * .2,
+                    child: pp == null
+                        ? Center(
+                            child: AutoSizeText(
+                              "Resim Ekle",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 40),
+                            ),
+                          )
+                        : Image.file(pp),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .05,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * .8,
-                height: MediaQuery.of(context).size.height * .09,
-                child: CupertinoTextField(
-                  controller: price,
-                  placeholder: "Ödül",
-                  textAlign: TextAlign.center,
-                  padding: EdgeInsets.all(20),
-                  minLines: 1,
-                  maxLines: 1,
-                  style: TextStyle(color: Colors.white),
-                  cursorColor: Colors.grey[600],
-                  placeholderStyle: TextStyle(color: Colors.grey[600]),
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(40, 41, 50, 100),
-                      borderRadius: BorderRadius.circular(20)),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 1,
+                  color: Color.fromRGBO(80, 81, 87, 100),
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .05,
-              ),
-              Visibility(
-                visible: number != "",
-                child: Row(
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .025,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * .8,
+                  height: MediaQuery.of(context).size.height * .2,
+                  child: CupertinoTextField(
+                    placeholder: "Açıklama",
+                    controller: explain,
+                    textAlign: TextAlign.left,
+                    padding: EdgeInsets.all(20),
+                    minLines: 1,
+                    maxLines: 10,
+                    style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.grey[600],
+                    placeholderStyle: TextStyle(color: Colors.grey[600]),
+                    textAlignVertical: TextAlignVertical.top,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(40, 41, 50, 100),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .05,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * .8,
+                  height: MediaQuery.of(context).size.height * .09,
+                  child: CupertinoTextField(
+                    controller: price,
+                    placeholder: "Ödül",
+                    textAlign: TextAlign.center,
+                    padding: EdgeInsets.all(20),
+                    minLines: 1,
+                    maxLines: 1,
+                    style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.grey[600],
+                    placeholderStyle: TextStyle(color: Colors.grey[600]),
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(40, 41, 50, 100),
+                        borderRadius: BorderRadius.circular(20)),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .05,
+                ),
+                Visibility(
+                  visible: number != "",
+                  child: Row(
+                    children: [
+                      SizedBox(width: MediaQuery.of(context).size.width * .1),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            firstcheckbox = !firstcheckbox;
+                          });
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * .1,
+                          height: MediaQuery.of(context).size.width * .1,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white)),
+                          child: firstcheckbox
+                              ? Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                )
+                              : SizedBox(),
+                        ),
+                      ),
+                      SizedBox(width: MediaQuery.of(context).size.width * .025),
+                      Container(
+                        width: MediaQuery.of(context).size.width * .6,
+                        height: MediaQuery.of(context).size.width * .1,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: AutoSizeText(
+                            "Ilan icin beni arasınlar",
+                            maxLines: 1,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .025,
+                ),
+                Row(
                   children: [
                     SizedBox(width: MediaQuery.of(context).size.width * .1),
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          firstcheckbox = !firstcheckbox;
+                          secondcheckbox = !secondcheckbox;
                         });
                       },
                       child: Container(
@@ -219,7 +280,7 @@ class _AddPageState extends State<AddPage> {
                         height: MediaQuery.of(context).size.width * .1,
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.white)),
-                        child: firstcheckbox
+                        child: secondcheckbox
                             ? Icon(
                                 Icons.check,
                                 color: Colors.white,
@@ -227,12 +288,14 @@ class _AddPageState extends State<AddPage> {
                             : SizedBox(),
                       ),
                     ),
+                    SizedBox(width: MediaQuery.of(context).size.width * .025),
                     Container(
                       width: MediaQuery.of(context).size.width * .6,
                       height: MediaQuery.of(context).size.width * .1,
-                      child: Center(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
                         child: AutoSizeText(
-                          "Ilan icin beni arasınlar",
+                          "Gönderi sözleşmesini kabul ediyorum",
                           maxLines: 1,
                           style: TextStyle(color: Colors.white),
                         ),
@@ -240,74 +303,48 @@ class _AddPageState extends State<AddPage> {
                     )
                   ],
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .025,
-              ),
-              Row(
-                children: [
-                  SizedBox(width: MediaQuery.of(context).size.width * .1),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        secondcheckbox = !secondcheckbox;
-                      });
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * .1,
-                      height: MediaQuery.of(context).size.width * .1,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white)),
-                      child: secondcheckbox
-                          ? Icon(
-                              Icons.check,
-                              color: Colors.white,
-                            )
-                          : SizedBox(),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * .6,
-                    height: MediaQuery.of(context).size.width * .1,
-                    child: Center(
-                      child: AutoSizeText(
-                        "Gönderi sözleşmesini kabul ediyorum",
-                        maxLines: 1,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .05,
-              ),
-              GestureDetector(
-                onTap: () {
-                  context.read<AddPostBloc>().add(AddPost(
-                      model: new NewPostModel(
-                          explain.text.trim(),
-                          price.text.trim(),
-                          firstcheckbox ? number : "",
-                          uploadimage)));
-                },
-                child: Container(
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .05,
+                ),
+                Container(
                   width: MediaQuery.of(context).size.width * .6,
                   height: MediaQuery.of(context).size.height * .07,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Color.fromRGBO(216, 146, 22, 100)),
-                  child: Center(
-                    child: AutoSizeText(
-                      "Paylaş",
-                      minFontSize: 1,
-                      maxLines: 1,
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: RoundedLoadingButton(
+                    controller: _btnController,
+                    onPressed: () {
+                      if (secondcheckbox)
+                        context.read<AddPostBloc>().add(AddPost(
+                            model: new NewPostModel(
+                                explain.text.trim(),
+                                price.text.trim(),
+                                firstcheckbox ? number : "",
+                                uploadimage)));
+                      else {
+                        setState(() {
+                          _btnController.reset();
+                          text = "Sözleşme kabul edilmelidir";
+                        });
+                      }
+                    },
+                    color: Color.fromRGBO(216, 146, 22, 100),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: AutoSizeText(
+                          text,
+                          minFontSize: 1,
+                          maxLines: 1,
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -316,13 +353,6 @@ class _AddPageState extends State<AddPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddPostBloc, AddPostStates>(
-        builder: (BuildContext context, AddPostStates state) {
-      if (state is Loading) {
-        return LoadinPage();
-      } else {
-        return home();
-      }
-    });
+    return home();
   }
 }
