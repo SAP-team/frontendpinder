@@ -58,6 +58,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pinder',
       initialRoute: '/',
+      debugShowMaterialGrid: false,
+      debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => MainAuthState(),
       },

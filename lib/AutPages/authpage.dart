@@ -83,23 +83,6 @@ class _AuthMainPageState extends State<AuthMainPage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * .025,
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushReplacementNamed(context, "/home");
-            },
-            child: Container(
-              width: MediaQuery.of(context).size.width * .4,
-              height: MediaQuery.of(context).size.height * .07,
-              child: Center(
-                child: AutoSizeText(
-                  "Kayıt olmadan devam et",
-                  minFontSize: 1,
-                  maxLines: 1,
-                  style: TextStyle(color: Colors.white, fontSize: 60),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );

@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:pinder/halpers/models/commentmodel.dart';
 import 'package:pinder/halpers/models/detailmodel.dart';
 import 'package:pinder/halpers/models/feedmodel.dart';
+import 'package:pinder/halpers/models/newcommentmode.dart';
 import 'package:pinder/halpers/models/newpostmodel.dart';
 import 'package:pinder/halpers/profilemodel.dart';
 
@@ -59,7 +60,6 @@ class Api {
       Uri nexturi = Uri.parse(baseurl + urlforsignup);
 
       var response = await http.post(nexturi, body: {
-        "PostName": model.explain,
         "Description": model.explain,
         "Prize": model.price,
         "PostImage": model.image,
@@ -110,7 +110,7 @@ class Api {
         List<FeedModel> feeds = List();
         for (int i = 0; i < jsonobject.length; i++) {
           FeedModel feed = new FeedModel(jsonobject[i]["id"].toString(),
-              jsonobject[i]["postName"], jsonobject[i]["postImage"]);
+              jsonobject[i]["description"], jsonobject[i]["postImage"]);
           feeds.add(feed);
         }
         Map data = {
@@ -135,7 +135,6 @@ class Api {
   Future<Map> getdetail(String id) async {
     try {
       var urlforsignup = "post/getbyid?Id=$id";
-      print(id);
       Uri nexturi = Uri.parse(baseurl + urlforsignup);
       final response = await http.get(nexturi);
 
@@ -149,17 +148,39 @@ class Api {
           var jsonobject = json.decode(commentresponse.body);
 
           for (int i = 0; i < jsonobject.length; i++) {
-            comments.add(CommentModel(jsonobject[i]["userId"].toString(),
-                jsonobject[i]["postComment"]));
+            var urlforimage =
+                "comment/getimagebyuserid?userid=${jsonobject[i]["userId"]}";
+            Uri urlfforimage = Uri.parse(baseurl + urlforimage);
+            final respsonseforiamge = await http.get(urlfforimage);
+
+            if (respsonseforiamge.statusCode == 200) {
+              comments.add(CommentModel(
+                  jsonobject[i]["userId"].toString(),
+                  jsonobject[i]["postComment"],
+                  base64Decode(respsonseforiamge.body)));
+            } else
+              comments.add(CommentModel(jsonobject[i]["userId"].toString(),
+                  jsonobject[i]["postComment"], null));
           }
         }
-        print(comments.length);
+        String image = "", name = "";
+        var urlforpostownerdata = "user/getbyid?Id=${jsonobject["userId"]}";
+        Uri foruserdata = Uri.parse(baseurl + urlforpostownerdata);
+        final foruserdataresponse = await http.get(foruserdata);
+        if (foruserdataresponse.statusCode == 200) {
+          var jsonfodata = json.decode(foruserdataresponse.body);
+          name = jsonfodata["firstName"];
+          image = jsonfodata["userImage"];
+        }
         DetailModel detail = new DetailModel(
             jsonobject["description"],
             jsonobject["prize"],
             jsonobject["telNo"],
             base64Decode(jsonobject["postImage"]),
-            comments);
+            comments,
+            name,
+            image != null ? base64Decode(image) : null,
+            id);
         Map data = {
           'isscuses': true,
           'result': detail,
@@ -188,15 +209,15 @@ class Api {
       final response = await http.get(
         nexturi,
       );
-
       if (response.statusCode == 200) {
         var jsonobject = json.decode(response.body);
         ProfileModel model = new ProfileModel(
-            jsonobject["firstName"],
-            jsonobject["lastName"],
-            jsonobject["email"],
-            jsonobject["userImage"],
-            jsonobject["phoneNumber"]);
+          jsonobject["firstName"] ?? "",
+          jsonobject["lastName"] ?? "",
+          jsonobject["email"] ?? "",
+          jsonobject["phoneNumber"] ?? "",
+          jsonobject["userImage"] ?? "",
+        );
         Map data = {
           'isscuses': true,
           'result': model,
@@ -255,17 +276,15 @@ class Api {
 
       String userid = box.read("uid");
       Uri nexturi = Uri.parse(baseurl + urlforsignup);
-
       var response = await http.post(nexturi, body: {
-        "Email": model.email,
-        "FirstName": model.first,
-        "LastName": model.last,
-        "UserImage": model.image,
-        "TelNo": model.number,
-        "Password": model.password,
+        "Email": model.email ?? "",
+        "FirstName": model.first ?? "",
+        "LastName": model.last ?? "",
+        "UserImage": model.image ?? "",
+        "PhoneNumber": model.number ?? "",
+        "Password": model.password ?? "",
         "Id": userid,
       });
-
       if (response.statusCode == 200) {
         Map data = {
           'isscuses': true,
@@ -292,6 +311,38 @@ class Api {
         'result': e,
       };
       return data;
+    }
+  }
+
+  Future<Map> addcoments(NewCommentModel model) async {
+    try {
+      var urlforaddcomment = "comment/add";
+
+      Uri nexturi = Uri.parse(baseurl + urlforaddcomment);
+      final response = await http.post(
+        nexturi,
+        headers: headers,
+        body:
+            '''{"PostComment":"${model.postcomment}","UserId":${model.userid},"PostId":${model.postid}}''',
+      );
+
+      if (response.statusCode == 200) {
+        Map data = {
+          'isscuses': true,
+          'result': model.postid,
+        };
+        return data;
+      } else if (response.statusCode == 400) {
+        Map data = {
+          'isscuses': false,
+          'result': response.body,
+        };
+        return data;
+      } else
+        return null;
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 }
