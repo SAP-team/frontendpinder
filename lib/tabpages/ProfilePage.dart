@@ -121,7 +121,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget sucsses(ProfileModel model) {
     if (model.image != "") iamge = base64Decode(model.image.toString());
     print(model.image);
-
     return SafeArea(
       bottom: false,
       child: NotificationListener<OverscrollIndicatorNotification>(
@@ -249,7 +248,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: MediaQuery.of(context).size.width * .9,
                 height: MediaQuery.of(context).size.height * .07,
                 child: CupertinoTextField(
-                  placeholder: "${model.phone ?? "Telefon numarası"}",
+                  placeholder:
+                      "${model.phone == "" ? "Telefon numarası" : model.phone}",
                   controller: phonenumber,
                   style: TextStyle(color: Colors.white),
                   placeholderStyle:
